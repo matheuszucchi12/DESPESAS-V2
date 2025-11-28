@@ -1,141 +1,110 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Controle de Despesas</title>
+    <link rel="stylesheet" href="style.css" />
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 500px;
-            margin: auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        input,
-        select,
-        button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-            border: none;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        h2 {
-            text-align: center;
-        }
-
-        #msg {
-            margin-top: 15px;
-            text-align: center;
-            font-weight: bold;
-        }
-    </style>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
 
-    <div class="container">
-        <h2>Registrar Despesa</h2>
+<header>
+    <h1>💸 Controle de Despesas</h1>
+</header>
 
-        <label>Data</label>
-        <input type="date" id="data">
+<main>
 
-        <label>Categoria</label>
+    <!-- RESUMO -->
+    <section id="resumo">
+        <div class="card"><h3>Total Gasto</h3><p id="totalGasto">R$ 0,00</p></div>
+        <div class="card"><h3>Maior Despesa</h3><p id="maiorDespesa">R$ 0,00</p></div>
+        <div class="card"><h3>Qtd. de Despesas</h3><p id="qtdDespesas">0</p></div>
+    </section>
+
+    <!-- FORMULÁRIO -->
+    <section id="formulario">
+        <h2>Adicionar Despesa</h2>
+
         <select id="categoria">
-            <option>Alimentação</option>
-            <option>Transporte</option>
-            <option>Moradia</option>
-            <option>Lazer</option>
-            <option>Saúde</option>
-            <option>Outros</option>
+            <option value="">Selecione a categoria</option>
+            <option>🏠 Moradia</option>
+            <option>🛒 Alimentação</option>
+            <option>🚗 Transporte</option>
+            <option>❤️ Saúde</option>
+            <option>🎓 Educação</option>
+            <option>💼 Trabalho / Profissão</option>
+            <option>📺 Assinaturas e serviços</option>
+            <option>👗 Vestuário e cuidados pessoais</option>
+            <option>🐶 Pets</option>
+            <option>🎉 Lazer e vida social</option>
+            <option>💳 Finanças pessoais</option>
+            <option>🧩 Outros gastos</option>
         </select>
 
-        <label>Descrição</label>
-        <input type="text" id="descricao" placeholder="Ex: Mercado, Uber, etc">
+        <!-- AGORA A DESCRIÇÃO É UM SELECT DINÂMICO -->
+        <select id="descricao">
+            <option value="">Selecione a descrição</option>
+        </select>
 
-        <label>Valor (R$)</label>
-        <input type="number" id="valor" step="0.01">
+        <input type="number" id="valor" placeholder="Valor (R$)">
+        <input type="date" id="data">
 
-        <button onclick="enviar()">Enviar</button>
+        <button onclick="adicionarDespesa()">Adicionar</button>
+    </section>
 
-        <div id="msg"></div>
-    </div>
+    <!-- FILTROS -->
+    <section id="filtros">
+        <h2>Filtros</h2>
 
+        <select id="filtroCategoria">
+            <option value="">Todas as categorias</option>
+            <option>🏠 Moradia</option>
+            <option>🛒 Alimentação</option>
+            <option>🚗 Transporte</option>
+            <option>❤️ Saúde</option>
+            <option>🎓 Educação</option>
+            <option>💼 Trabalho / Profissão</option>
+            <option>📺 Assinaturas e serviços</option>
+            <option>👗 Vestuário e cuidados pessoais</option>
+            <option>🐶 Pets</option>
+            <option>🎉 Lazer e vida social</option>
+            <option>💳 Finanças pessoais</option>
+            <option>🧩 Outros gastos</option>
+        </select>
 
-    <script>
-        async function enviar() {
-            document.getElementById("msg").innerHTML = "Enviando...";
+        <input type="month" id="filtroMes">
+        <button onclick="aplicarFiltros()">Aplicar Filtros</button>
+    </section>
 
-            const data = document.getElementById("data").value;
-            const categoria = document.getElementById("categoria").value;
-            const descricao = document.getElementById("descricao").value;
-            const valor = parseFloat(document.getElementById("valor").value);
+    <!-- TABELA -->
+    <section id="tabela">
+        <h2>Lista de Despesas</h2>
 
-            if (!data || !descricao || !valor) {
-                document.getElementById("msg").innerHTML = "Preencha todos os campos!";
-                return;
-            }
+        <table>
+            <thead>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Data</th>
+                    <th>Categoria</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody id="listaDespesas"></tbody>
+        </table>
+    </section>
 
-            // 🔥 SUBSTITUA AQUI PELA SUA URL DO NOCODEAPI
-            const API_URL = "https://v1.nocodeapi.com/matheuszucchi/airtable/IgbhtkyBNflYvQkS";
+    <!-- GRÁFICO -->
+    <section id="grafico">
+        <h2>Gráfico Mensal</h2>
+        <canvas id="graficoDespesas" width="50" height="50"></canvas>
+    </section>
 
-            try {
-                const resposta = await fetch(API_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        fields: {
-                            data: data,
-                            categoria: categoria,
-                            descricao: descricao,
-                            valor: valor
-                        }
-                    })
-                });
+</main>
 
-                if (!resposta.ok) {
-                    document.getElementById("msg").innerHTML = "Erro ao enviar!";
-                    return;
-                }
-
-                document.getElementById("msg").innerHTML = "✔️ Despesa registrada com sucesso!";
-
-                document.getElementById("data").value = "";
-                document.getElementById("descricao").value = "";
-                document.getElementById("valor").value = "";
-
-            } catch (e) {
-                document.getElementById("msg").innerHTML = "Erro na conexão!";
-                console.error(e);
-            }
-        }
-    </script>
-
+<script src="script.js"></script>
 </body>
-
 </html>
