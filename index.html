@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -108,3 +109,115 @@
 <script src="script.js"></script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Controle de Despesas</title>
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<header>
+    <h1>💸 Controle de Despesas</h1>
+</header>
+
+<main>
+
+    <!-- RESUMO -->
+    <section id="resumo">
+        <div class="card"><h3>Total Gasto</h3><p id="totalGasto">R$ 0,00</p></div>
+        <div class="card"><h3>Maior Despesa</h3><p id="maiorDespesa">R$ 0,00</p></div>
+        <div class="card"><h3>Qtd. de Despesas</h3><p id="qtdDespesas">0</p></div>
+    </section>
+
+    <!-- FORMULÁRIO -->
+    <section id="formulario">
+        <h2>Adicionar Despesa</h2>
+
+        <select id="categoria">
+            <option value="">Selecione a categoria</option>
+            <option>🏠 Moradia</option>
+            <option>🛒 Alimentação</option>
+            <option>🚗 Transporte</option>
+            <option>❤️ Saúde</option>
+            <option>🎓 Educação</option>
+            <option>💼 Trabalho / Profissão</option>
+            <option>📺 Assinaturas e serviços</option>
+            <option>👗 Vestuário e cuidados pessoais</option>
+            <option>🐶 Pets</option>
+            <option>🎉 Lazer e vida social</option>
+            <option>💳 Finanças pessoais</option>
+            <option>🧩 Outros gastos</option>
+        </select>
+
+        <!-- AGORA A DESCRIÇÃO É UM SELECT DINÂMICO -->
+        <select id="descricao">
+            <option value="">Selecione a descrição</option>
+        </select>
+
+        <input type="number" id="valor" placeholder="Valor (R$)">
+        <input type="date" id="data">
+
+        <button onclick="adicionarDespesa()">Adicionar</button>
+    </section>
+
+    <!-- FILTROS -->
+    <section id="filtros">
+        <h2>Filtros</h2>
+
+        <select id="filtroCategoria">
+            <option value="">Todas as categorias</option>
+            <option>🏠 Moradia</option>
+            <option>🛒 Alimentação</option>
+            <option>🚗 Transporte</option>
+            <option>❤️ Saúde</option>
+            <option>🎓 Educação</option>
+            <option>💼 Trabalho / Profissão</option>
+            <option>📺 Assinaturas e serviços</option>
+            <option>👗 Vestuário e cuidados pessoais</option>
+            <option>🐶 Pets</option>
+            <option>🎉 Lazer e vida social</option>
+            <option>💳 Finanças pessoais</option>
+            <option>🧩 Outros gastos</option>
+        </select>
+
+        <input type="month" id="filtroMes">
+        <button onclick="aplicarFiltros()">Aplicar Filtros</button>
+    </section>
+
+    <!-- TABELA -->
+    <section id="tabela">
+        <h2>Lista de Despesas</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Data</th>
+                    <th>Categoria</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody id="listaDespesas"></tbody>
+        </table>
+    </section>
+
+    <!-- GRÁFICO -->
+    <section id="grafico">
+        <h2>Gráfico Mensal</h2>
+        <canvas id="graficoDespesas" width="50" height="50"></canvas>
+    </section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
+>>>>>>> a2220baae3e789997ea36be17035227c8806dc74
